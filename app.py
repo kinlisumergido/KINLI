@@ -2,10 +2,9 @@ from flask import Flask, jsonify, render_template_string
 
 app = Flask(__name__)
 
-# --- API Route ---
 @app.route('/')
 def home():
-    return "Welcome to my Flask API!"
+    return "Welcome to my Flask API!<br><a href='/dashboard'>Go to Dashboard</a>"
 
 @app.route('/student')
 def get_student():
@@ -15,10 +14,8 @@ def get_student():
         "section": "Zechariah"
     })
 
-# --- Dashboard Route ---
 @app.route('/dashboard')
 def dashboard():
-    # Inline HTML Template (you could also use a templates folder)
     html = """
     <!DOCTYPE html>
     <html>
@@ -28,7 +25,8 @@ def dashboard():
         <style>
             body {
                 background-color: #f8f9fa;
-                margin-top: 50px;
+                margin-top: 60px;
+                font-family: Arial, sans-serif;
             }
             .card {
                 max-width: 400px;
@@ -40,15 +38,15 @@ def dashboard():
     <body>
         <div class="container text-center">
             <h1 class="mb-4">🎓 Student Dashboard</h1>
-            <div class="card p-3">
+            <div class="card p-4">
                 <h4 id="name">Name: Loading...</h4>
                 <h5 id="grade">Grade: </h5>
                 <h5 id="section">Section: </h5>
             </div>
+            <a href="/" class="btn btn-primary mt-4">← Back to API Home</a>
         </div>
 
         <script>
-            // Fetch student data from API
             fetch('/student')
                 .then(response => response.json())
                 .then(data => {
@@ -56,9 +54,7 @@ def dashboard():
                     document.getElementById('grade').textContent = "Grade: " + data.grade;
                     document.getElementById('section').textContent = "Section: " + data.section;
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                .catch(error => console.error('Error:', error));
         </script>
     </body>
     </html>
